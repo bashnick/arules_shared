@@ -22,6 +22,7 @@ class Eclat:
         self.item_len = 0
         self.item_dict = dict()
         self.final_dict = dict()
+        self.data_size = 0
     
     #creating a dicitionary of different non NA Items from all the trans-ns
     def read_data(self, dataset):
@@ -35,9 +36,10 @@ class Eclat:
                     self.item_dict.setdefault(item, []).append(1)
                 self.item_dict[item].append(index)
         #set instance variables
+        self.data_size = dataset.shape[0]
         self.item_lst = list(self.item_dict.keys())
         self.item_len = len(self.item_lst)
-        self.min_support = self.min_support * dataset.shape[0]
+        self.min_support = self.min_support * self.data_size
         print ("min_supp", self.min_support)
         
     #recursive method to find all item sets in accordance with Eclat algorithm
@@ -65,4 +67,4 @@ class Eclat:
         
     #output is a dictionary with ItemSets and absolute value of support
     def transform(self):
-        return {k: v[0] for k, v in self.final_dict.items()}
+        return {k: "{0:.4f}%".format((v[0]+0.0)/self.data_size*100) for k, v in self.final_dict.items()}
