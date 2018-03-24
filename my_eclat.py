@@ -6,15 +6,9 @@ Eclat Algorithm
 # License: GNU GPL
 
 import numpy as np
-"""
-The class is initialized with 3 parameters:
-    min_support - is minimum support for an Item Set. min_support is taken as % of dataset length
-    max_items - maximal number of elements in the Item Set
-    min_items - minimal number of eleents in the Item Set
-"""
+
 class Eclat:
-    #initializing of the class object
-    def __init__(self, min_support = 0.01, max_items = 5, min_items = 2):
+    def __init__(self, min_support = 5, max_items = 5, min_items = 2):
         self.min_support = min_support
         self.max_items = max_items
         self.min_items = min_items
@@ -23,7 +17,6 @@ class Eclat:
         self.item_dict = dict()
         self.final_dict = dict()
     
-    #creating a dicitionary of different non NA Items from all the trans-ns
     def read_data(self, dataset):
         for index, row in dataset.iterrows():
             row_wo_na = row.dropna().unique()
@@ -33,15 +26,11 @@ class Eclat:
                     self.item_dict[item][0] += 1
                 else:
                     self.item_dict.setdefault(item, []).append(1)
-                self.item_dict[item].append(index)
+                self.item_dict[item].append(index) #later a more sofisticated data structure can be used to search more efficient
         #set instance variables
         self.item_lst = list(self.item_dict.keys())
         self.item_len = len(self.item_lst)
-        self.min_support = self.min_support * dataset.shape[0]
-        print ("min_supp", self.min_support)
         
-    #recursive method to find all item sets in accordance with Eclat algorithm
-    #data structure is the following: {Item: [Supp number, tid1, tid2, tid3, ...]}
     def recur_eclat(self, item_name, tids_array, minsupp, num_items, k_start):
         if tids_array[0] >= minsupp and num_items <= self.max_items:
             for k in range(k_start+1, self.item_len):
@@ -53,8 +42,7 @@ class Eclat:
                     if new_tids_size >= minsupp:
                         if num_items >= self.min_items: self.final_dict.update({new_item: new_tids})
                         self.recur_eclat(new_item, new_tids, minsupp, num_items+1, k)
-    
-    #call the described above functions for the given dataset
+        
     def fit(self, dataset):
         i = 0
         self.read_data(dataset)
@@ -63,6 +51,5 @@ class Eclat:
             i+=1
         return self
         
-    #output is a dictionary with ItemSets and absolute value of support
     def transform(self):
-        return {k: v[0] for k, v in self.final_dict.items()}
+        return {k: v[0] for k, v in self.final_dict.items()}    
