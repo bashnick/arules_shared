@@ -10,7 +10,7 @@ import numpy as np
 The class is initialized with 3 parameters:
     min_support - is minimum support for an Item Set. min_support is taken as % of dataset length
     max_items - maximal number of elements in the Item Set
-    min_items - minimal number of eleents in the Item Set
+    min_items - minimal number of elements in the Item Set
 """
 class Eclat:
     #initializing of the class object
