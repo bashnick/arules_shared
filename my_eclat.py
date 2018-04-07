@@ -27,7 +27,7 @@ class Eclat:
     #creating a dicitionary of different non NA Items from all the trans-ns
     def read_data(self, dataset):
         for index, row in dataset.iterrows():
-            row_wo_na = row.dropna().unique()
+            row_wo_na = set(row[0])
             for item in row_wo_na:
                 item = item.strip()
                 if item in self.item_dict:
@@ -40,6 +40,7 @@ class Eclat:
         self.item_lst = list(self.item_dict.keys())
         self.item_len = len(self.item_lst)
         self.min_support = self.min_support * self.data_size
+        print ('Data read successfully')
         print ("min_supp", self.min_support)
         
     #recursive method to find all item sets in accordance with Eclat algorithm
